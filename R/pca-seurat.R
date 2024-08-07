@@ -13,15 +13,19 @@ pca_seurat <- function(input){
    print(for_pca[["pca"]], dims = 1:5, nfeatures = 5)
    
    image <- Seurat::VizDimLoadings(for_pca, dims = 1:2, reduction = "pca")
-   
    ggplot2::ggsave(image, file = "pca.png")
    
-   image1 <- Seurat::DimPlot(for_pca, reduction = "pca") + ggplot2::theme(legend.position = "none")
-   
-   ggplot2::ggsave(image1, file = "dimplot.png")
-   
-   
    image2 <- Seurat::DimHeatmap(for_pca, dims = 1, cells = 500, balanced = TRUE)
-   
    ggplot2::ggsave(image2, file = "heatmap.png")
+   
+   image3 <- Seurat::ElbowPlot(for_pca)
+   ggplot2::ggsave(image2, file = "elbowplot.png")
+   
+   image4 <- Seurat::FindNeighbors(for_pca, dims= 1:15)
+   image4 <- Seurat::FindClusters(image4, resolution = c(0.1, 0.3, 0.5, 0.7, 1))
+   saveRDS(image4, file = "clustersperresolution.rds")
+   
+   image4 <- Seurat::DimPlot(image4, group.by = "RNA_snn_res.0.3", label = TRUE)
+   
+   ggplot2::ggsave(image4, file = "dimplot.png")
 }
