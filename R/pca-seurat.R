@@ -6,14 +6,16 @@
 #' @examples
 #' pca_seurat("after_scaling.rds")
 #' @export
-
 pca_seurat <- function(input){
    for_pca <- readRDS(input)
    for_pca <- Seurat::RunPCA(for_pca, features = Seurat::VariableFeatures(object = for_pca))
    print(for_pca[["pca"]], dims = 1:5, nfeatures = 5)
    
    image <- Seurat::VizDimLoadings(for_pca, dims = 1:2, reduction = "pca")
-   ggplot2::ggsave(image, file = "pca.png", width = 15, height = 10)
+   ggplot2::ggsave(image, file = "pca_results.png", width = 15, height = 10)
+   
+   image1 <- Seurat::DimPlot(for_pca, reduction = "pca") + ggplot2::theme(legend.position = "none")
+   ggplot2::ggsave(image1, file = "pca_plot.png", width = 15, height = 10)
    
    image2 <- Seurat::DimHeatmap(for_pca, dims = 1, cells = 500, balanced = TRUE)
    ggplot2::ggsave(image2, file = "heatmap.png", width = 12, height = 12)
