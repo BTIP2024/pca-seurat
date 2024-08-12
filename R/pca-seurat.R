@@ -23,11 +23,4 @@ pca_seurat <- function(input){
    image3 <- Seurat::ElbowPlot(for_pca)
    ggplot2::ggsave(image3, file = "elbowplot.png", width = 10)
    
-   image4 <- Seurat::FindNeighbors(for_pca, dims= 1:15)
-   image4 <- Seurat::FindClusters(image4, resolution = c(0.1, 0.3, 0.5, 0.7, 1))
-   saveRDS(image4, file = "clustersperresolution.rds")
-   
-   image4 <- Seurat::DimPlot(image4, group.by = "RNA_snn_res.0.3", label = TRUE)
-   
-   ggplot2::ggsave(image4, file = "dimplot.png", width = 12, height = 10)
 }
