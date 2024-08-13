@@ -8,9 +8,10 @@
 #' @export
 pca_seurat <- function(input){
    for_pca <- readRDS(input)
-   for_pca <- Seurat::RunPCA(for_pca, features = Seurat::VariableFeatures(object = for_pca))
+   for_pca <- Seurat::RunPCA(for_pca, features = Seurat::VariableFeatures(for_pca))
    others <- for_pca
-   # 3d plots
+   
+   # 2D plots no labels
    library(plotly)
    
    new.cluster.ids <- c("Naive CD4 T", "CD14+ Mono", "Memory CD4 T", "B", "CD8 T", "FCGR3A+ Mono", "NK", "DC", "Platelet")
@@ -20,8 +21,18 @@ pca_seurat <- function(input){
    
    ggplot_pca <- ggplotly(plot_pca)
    
-   htmltools::save_html(ggplot_pca, file = "pca_labeled.html")
+   htmltools::save_html(ggplot_pca, file = "pca_unlabeled.html")
    
+   #2D with labels
+   for_pca <- Seurat::FindNeighbors(for_pca, dims=1:15)
+   for_pca <- Seurat::FindClusters(for_pca, resolution = c(0.1, 0.3, 0.5, 0.7, 1))
+   with_labels1 <- Seurat::DimPlot(for_pca, group.by = "RNA_snn_res.0.3", label = TRUE)
+   with_labels2 <- Seurat::DimPlot(for_pca, group.by = "RNA_snn_res.0.1", label = TRUE)
+   
+   htmltools::save_html(with_labels1, file = "pca03_labeled_.html")
+   htmltools::save_html(with_labels2, file = "pca01_labeled_.html")
+   
+   # Other plots
    image <- Seurat::VizDimLoadings(others, dims = 1:2, reduction = "pca")
    ggplot2::ggsave(image, file = "pca_results.png", width = 15, height = 10)
    
