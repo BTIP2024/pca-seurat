@@ -9,18 +9,31 @@
 pca_seurat <- function(input){
    for_pca <- readRDS(input)
    for_pca <- Seurat::RunPCA(for_pca, features = Seurat::VariableFeatures(object = for_pca))
-   print(for_pca[["pca"]], dims = 1:5, nfeatures = 5)
+   others <- for_pca
+   # 3d plots
+   library(plotly)
    
-   image <- Seurat::VizDimLoadings(for_pca, dims = 1:2, reduction = "pca")
+   new.cluster.ids <- c("Naive CD4 T", "CD14+ Mono", "Memory CD4 T", "B", "CD8 T", "FCGR3A+ Mono", "NK", "DC", "Platelet")
+   names(new.cluster.ids) <- levels(for_pca)
+   for_pca <- Seurat::RenameIdents(for_pca, new.cluster.ids)
+   plot_pca <- Seurat::DimPlot(for_pca, reduction = "pca", label = FALSE) + ggplot2::xlab("PCA 1") + ggplot2::ylab("PCA 2") + ggplot2::theme(axis.title = element_text(size = 18)) + ggplot2::guides(colour = guide_legend(override.aes = list(size = 10)))
+   
+   ggplot_pca <- ggplotly(plot_pca)
+   
+   htmltools::save_html(ggplot_pca, file = "pca_labeled.html")
+   
+   image <- Seurat::VizDimLoadings(others, dims = 1:2, reduction = "pca")
    ggplot2::ggsave(image, file = "pca_results.png", width = 15, height = 10)
    
-   image1 <- Seurat::DimPlot(for_pca, reduction = "pca") + ggplot2::theme(legend.position = "none")
-   ggplot2::ggsave(image1, file = "pca_plot.png", width = 15, height = 10)
+   image1 <- Seurat::DimPlot(others, reduction = "pca", label = TRUE)
+   ggplot2::ggsave(image1, file = "pca_plot_unlabeled.png", width = 15, height = 10)
    
-   image2 <- Seurat::DimHeatmap(for_pca, dims = 1, cells = 500, balanced = TRUE)
+   image2 <- Seurat::DimHeatmap(others, dims = 1, cells = 500, balanced = TRUE)
    ggplot2::ggsave(image2, file = "heatmap.png", width = 12, height = 12)
    
-   image3 <- Seurat::ElbowPlot(for_pca)
-   ggplot2::ggsave(image3, file = "elbowplot.png", width = 10)
+   image3 <- Seurat::DimHeatmap(others, dims = 1:10, cells = 500, balanced = TRUE)
+   ggplot2::ggsave(image3, file = "heatmap_multiple.png", width = 20, height = 20)
    
+   image4 <- Seurat::ElbowPlot(others)
+   ggplot2::ggsave(image4, file = "elbowplot.png", width = 10)
 }
