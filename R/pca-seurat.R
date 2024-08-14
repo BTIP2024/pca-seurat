@@ -29,8 +29,8 @@ pca_seurat <- function(input){
    with_labels1 <- Seurat::DimPlot(for_pca, group.by = "RNA_snn_res.0.3", label = TRUE)
    with_labels2 <- Seurat::DimPlot(for_pca, group.by = "RNA_snn_res.0.1", label = TRUE)
    
-   htmltools::save_html(with_labels1, file = "pca03_labeled_.html")
-   htmltools::save_html(with_labels2, file = "pca01_labeled_.html")
+   htmltools::save_html(with_labels1, file = "pca03_labeled.html")
+   htmltools::save_html(with_labels2, file = "pca01_labeled.html")
    
    # Other plots
    image <- Seurat::VizDimLoadings(others, dims = 1:2, reduction = "pca")
