@@ -28,6 +28,9 @@ pca_seurat <- function(input){
    for_pca <- Seurat::FindClusters(for_pca, resolution = c(0.1, 0.3, 0.5, 0.7, 1))
    with_labels1 <- Seurat::DimPlot(for_pca, group.by = "RNA_snn_res.0.3", label = TRUE)
    with_labels2 <- Seurat::DimPlot(for_pca, group.by = "RNA_snn_res.0.1", label = TRUE)
+
+   with_labels1 <- ggplotly(with_labels1)
+   with_labels2 <- ggplotly(with_labels2)
    
    htmltools::save_html(with_labels1, file = "pca03_labeled.html")
    htmltools::save_html(with_labels2, file = "pca01_labeled.html")
