@@ -21,7 +21,7 @@ pca_seurat <- function(input){
    
    ggplot_pca <- ggplotly(plot_pca)
    
-   htmltools::save_html(ggplot_pca, file = "pca_unlabeled.html")
+   htmltools::save_html(ggplot_pca, file = "pca_2d_unlabeled.html")
    
    #2D with labels
    for_pca <- Seurat::FindNeighbors(for_pca, dims=1:15)
@@ -32,8 +32,24 @@ pca_seurat <- function(input){
    with_labels1 <- ggplotly(with_labels1)
    with_labels2 <- ggplotly(with_labels2)
    
-   htmltools::save_html(with_labels1, file = "pca03_labeled.html")
-   htmltools::save_html(with_labels2, file = "pca01_labeled.html")
+   htmltools::save_html(with_labels1, file = "pca03_2dplot_labeled.html")
+   htmltools::save_html(with_labels2, file = "pca01_2dplot_labeled.html")
+
+      #3d plots
+   plotting.data <- Seurat::FetchData(object = for_pca, vars = c("PC_1", "PC_2", "PC_3", "seurat_clusters"))
+   
+   plot.data$label <- paste(rownames(plot.data))
+   
+   plotin3d <- plotly::plot_ly(data = plot.data, 
+                               x = ~PC_1, y = ~PC_2, z = ~PC_3, 
+                               color = ~seurat_clusters,
+                               type = "scatter3d", 
+                               mode = "markers", 
+                               marker = list(size = 5, width=2),
+                               text=~label, 
+                               hoverinfo="text")
+   
+   htmltools::save_html(plotin3d, file = "pca_3dplot.html")
    
    # Other plots
    image <- Seurat::VizDimLoadings(others, dims = 1:2, reduction = "pca")
