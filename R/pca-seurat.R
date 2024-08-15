@@ -36,7 +36,7 @@ pca_seurat <- function(input){
    htmltools::save_html(with_labels2, file = "pca01_2dplot_labeled.html")
 
       #3d plots
-   plotting.data <- Seurat::FetchData(object = for_pca, vars = c("PC_1", "PC_2", "PC_3", "seurat_clusters"))
+   plot.data <- Seurat::FetchData(object = for_pca, vars = c("PC_1", "PC_2", "PC_3", "seurat_clusters"))
    
    plot.data$label <- paste(rownames(plot.data))
    
