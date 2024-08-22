@@ -1,13 +1,20 @@
 #' PCA on Seurat Data
 #' 
-#' This package performs linear dimensional reduction on the seurat object, generating png files
+#' This package performs linear dimensional reduction on the seurat object, generating PCA in 2D and 3D plots
 #' 
 #' @param input is the file after scaling
 #' @examples
 #' pca_seurat("after_scaling.rds")
 #' @export
 pca_seurat <- function(input){
-   for_pca <- readRDS(input)
+   if(!(tools::file_ext(input)) == "rds") {
+      return("Input file should be an rds file")
+   } else if(tools::file_ext(input) == "rds") {
+      for_pca <- readRDS(input)
+      
+      if(class(for_pca) != "Seurat") {
+         return("File is not a seurat object")
+      } else {
    for_pca <- Seurat::RunPCA(for_pca, features = Seurat::VariableFeatures(for_pca))
    others <- for_pca
    
@@ -66,4 +73,6 @@ pca_seurat <- function(input){
    
    image4 <- Seurat::ElbowPlot(others)
    ggplot2::ggsave(image4, file = "elbowplot.png", width = 10)
-}
+      }
+   }
+   }

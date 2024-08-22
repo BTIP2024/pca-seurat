@@ -10,7 +10,7 @@ pca_seurat(input)
 \item{input}{is the file after scaling}
 }
 \description{
-This package performs linear dimensional reduction on the seurat object, generating png files
+This package performs linear dimensional reduction on the seurat object, generating PCA in 2D and 3D plots
 }
 \examples{
 pca_seurat("after_scaling.rds")
