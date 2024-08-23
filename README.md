@@ -15,7 +15,7 @@ pca_seurat("after_scaling.rds")
 
 ## scRNAseq processing workflow 
 
-The standard scRNAseq processing workflow with the R package Seurat consists of seven (7) steps. The output of this package and function should be used as input for the scRNAseq processing pipeline. 
+The standard scRNAseq processing workflow with the R package Seurat consists of seven (7) steps. This package is the sixth (6th) step of the workflow.
 
 The following are the repositories of the packages for every step of the pipeline:
 1. QC and filtering: [qualitycontrolseurat package](https://github.com/BTIP2024/quality-control-seurat)
